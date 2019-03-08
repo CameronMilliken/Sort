@@ -2,31 +2,40 @@
 //  GroupController.swift
 //  Sort
 //
-//  Created by Cameron Milliken on 3/7/19.
+//  Created by Cameron Milliken on 3/8/19.
 //  Copyright © 2019 Cameron Milliken. All rights reserved.
 //
 
 import Foundation
 class GroupController {
     
-    let shared = GroupController()
+    static let shared = GroupController()
     
     var personList : [String] = []
     var groups : [Group] = []
+    init() {
+        self.personList = loadFromPersistentStorage()
+    }
     
-    // CRUD
+    // CRUD Functions
+    
     //Create
     func createPerson(person: String) {
-        personList.append(person)
-        //Save to persistence
+        self.personList.append(person)
+        saveToPersistence()
+       
+    }
+        
         
         
     func deletePerson(person: String) {
         guard let index = personList.index(of: person) else { return }
         personList.remove(at: index)
-        //Save to persistence
+        saveToPersistence()
         
         }
+        
+
         
         func fileURL() -> URL{
             let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -38,10 +47,10 @@ class GroupController {
             
         }
         
-        func saveToPersistentStorage(){
+        func saveToPersistence(){
             let encoder = JSONEncoder()
             do{
-                let data = try encoder.encode(personList)
+                let data = try encoder.encode(self.personList)
                 try data.write(to: fileURL())
             } catch{
                 print("🤬 There was an error saving!🤬 \(error.localizedDescription)")
@@ -59,8 +68,10 @@ class GroupController {
             }
             return []
         }
+    func createGroup() {
+            groups = []
+        
     }
-    
     
     
     
